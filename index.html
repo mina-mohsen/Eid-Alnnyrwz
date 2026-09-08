@@ -78,7 +78,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     
                     <!-- Section 1 Card -->
-                    <div id="sec-card-1" onclick="selectSection(1)" class="p-4 sm:p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
+                    <div id="sec-card-1" onclick="selectSection(1)" class="p-4 sm:p-5 rounded-2xl border-2 border-rose-500 bg-rose-50 cursor-pointer transition shadow-md flex items-center justify-between group">
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-2xl">❓</span>
@@ -580,7 +580,7 @@
         function initAudio() {
             if (state.audioEnabled) return;
             Tone.start();
-            state.audioEnabled, true;
+            state.audioEnabled = true;
             document.getElementById('bgm-status').innerText = "الصوت مفعل 🔊";
             document.getElementById('audio-icon').innerText = "🔊";
         }
