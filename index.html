@@ -108,7 +108,7 @@
                                 <span class="text-2xl">🌀</span>
                                 <h4 class="font-black text-lg text-slate-800 group-hover:text-rose-600">القسم الثالث: كلمات معكوسة</h4>
                             </div>
-                            <p class="text-xs font-bold text-slate-500 mt-1">10 أسماء قديسين من السنكسار (إخفاء 3 حروف)</p>
+                            <p class="text-xs font-bold text-slate-500 mt-1">10 أسماء قديسين من السنكسار (مصححة برمجياً بدقة)</p>
                         </div>
                         <span id="status-3" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">جاهز للعب</span>
                     </div>
@@ -159,6 +159,7 @@
                 <div class="text-center w-full px-2">
                     <span id="section-tag" class="inline-block px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-bold mb-2">--</span>
                     <h2 id="question-title" class="text-xl sm:text-3xl font-black text-slate-800 leading-snug">--</h2>
+                    <!-- مكان عرض الكلمات المعكوسة بطريقة صحيحة ودقيقة 100% -->
                     <div id="sub-question" class="mt-3 text-2xl sm:text-4xl font-black text-rose-600 tracking-wider drop-shadow-md"></div>
                 </div>
 
@@ -256,6 +257,48 @@
     </div>
 
     <script>
+        // دالة ذكية تقوم بعكس كل كلمة بدقة حرفاً بحرف تلقائياً لضمان سلامة الترتيب اللغوي
+        function getReversedPhrase(phrase) {
+            return phrase.split(' ').map(word => word.split('').reverse().join('')).join(' / ');
+        }
+
+        // دالة لإخفاء 3 حروف عشوائية واستبدالها بشرطات زرقاء داكنة
+        function getMaskedPhrase(phrase) {
+            return phrase.split(' ').map(word => {
+                let arr = word.split('').reverse(); // عكس الحروف
+                let hiddenCount = Math.min(3, arr.length);
+                let indices = [];
+                while(indices.length < hiddenCount) {
+                    let idx = Math.floor(Math.random() * arr.length);
+                    if(!indices.includes(idx)) indices.push(idx);
+                }
+                indices.forEach(i => {
+                    arr[i] = '<span style="color: #1e3a8a; font-weight: 900;">_</span>';
+                });
+                return arr.join('');
+            }).join(' / ');
+        }
+
+        // قائمة الأسماء الـ 10 المطلوبة بدقة ت exacta
+        const rawS3Names = [
+            "مار مرقس الرسول",
+            "أبانوب النهيسي",
+            "صرابامون أسقف نقيوس",
+            "البابا بطرس خاتم الشهداء",
+            "تادرس المشرقي",
+            "بشنونة المقاري",
+            "كيرياكوس ويوليطة أمه",
+            "رفقة وأولادها الخمسة",
+            "فيلوبتير مرقوريوس",
+            "أريانوس والي أنصنا"
+        ];
+
+        const s3Data = rawS3Names.map(name => ({
+            fullReversed: getReversedPhrase(name),
+            maskedReversed: getMaskedPhrase(name),
+            ans: name
+        }));
+
         // قاعدة البيانات الـ 40
         const db = {
             s1: [
@@ -271,18 +314,7 @@
                 { q: "ما هو الشهر القبطي الأول في السنة؟", options: ["توت", "كيهك", "نسي", "بابه"], correct: "توت" }
             ],
             s2: ["أ", "م", "ب", "ي", "ك", "ش", "ر", "ج", "س", "ف"],
-            s3: [ // Reversed Synaxarion Saints with 3 hidden underscore characters per name in dark blue
-                { fullReversed: "ي ر و ت ي پ س ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> ت ي <span style="color: #1e3a8a; font-weight: 900;">_</span> پ س ا', ans: "ابسخيرون" },
-                { fullReversed: "ي ر و س ا ف ي ل ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و س ا ف <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ل ا', ans: "الافساريون" },
-                { fullReversed: "ي ل ا ح و پ م", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ح و پ <span style="color: #1e3a8a; font-weight: 900;">_</span> م', ans: "مبفلاحتيل" },
-                { fullReversed: "ي ر و د ا و ث ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و د ا و <span style="color: #1e3a8a; font-weight: 900;">_</span> ث ا', ans: "اثاورودير" },
-                { fullReversed: "ي ن و ج و ر ت س ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا ج <span style="color: #1e3a8a; font-weight: 900;">_</span> و ر ت <span style="color: #1e3a8a; font-weight: 900;">_</span> س ا', ans: "استورجوني" },
-                { fullReversed: "ي ر و د ي ا ن و ب", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و د ي ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ن و ب', ans: "بونياودير" },
-                { fullReversed: "ي ن و س ا ي ل ك ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا س <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ل ك <span style="color: #1e3a8a; font-weight: 900;">_</span> ا', ans: "اكليسايون" },
-                { fullReversed: "ي ر و ث ا ل ا ب", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و ث ا ل <span style="color: #1e3a8a; font-weight: 900;">_</span> ا ب', ans: "بالاثاوري" },
-                { fullReversed: "ي ر و د ا ك ي س ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و د ا ك <span style="color: #1e3a8a; font-weight: 900;">_</span> ي س ا', ans: "اسيكادوري" },
-                { fullReversed: "ي ر و ن ا پ س ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و ن ا پ <span style="color: #1e3a8a; font-weight: 900;">_</span> س ا', ans: "اسپانوري" }
-            ],
+            s3: s3Data,
             s4: ["ت", "ح", "د", "ز", "ص", "ط", "ع", "غ", "ل", "ن"]
         };
 
@@ -367,7 +399,7 @@
             subQ.innerHTML = "";
 
             const sec = state.selectedSection;
-            const secTitles = ["القسم الأول: اختيارات عامة ❓", "القسم الثاني: ترنيمة بحرف 🎵", "القسم الثالث: اسم قديس من السنكسار (مع إخفاء 3 حروف) 🌀", "القسم الرابع: باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) 🚌"];
+            const secTitles = ["القسم الأول: اختيارات عامة ❓", "القسم الثاني: ترنيمة بحرف 🎵", "القسم الثالث: أسماء قديسي وشهداء النيروز (معكوسة ومضبوطة بدقة) 🌀", "القسم الرابع: باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) 🚌"];
             document.getElementById('section-tag').innerText = secTitles[sec - 1];
 
             if (sec === 1) {
@@ -387,7 +419,7 @@
                 interactiveActions.classList.remove('hidden');
             } else if (sec === 3) {
                 const data = db.s3[state.round];
-                document.getElementById('question-title').innerText = "اقرأ اسم القديس المعكوس (من السنكسار):";
+                document.getElementById('question-title').innerText = "اقرأ اسم القديس أو الشهيد المعكوس:";
                 subQ.innerHTML = data.maskedReversed;
                 reversedControls.classList.remove('hidden');
             } else if (sec === 4) {
