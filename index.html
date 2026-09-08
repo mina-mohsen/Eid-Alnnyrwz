@@ -108,7 +108,7 @@
                                 <span class="text-2xl">🌀</span>
                                 <h4 class="font-black text-lg text-slate-800 group-hover:text-rose-600">القسم الثالث: كلمات معكوسة</h4>
                             </div>
-                            <p class="text-xs font-bold text-slate-500 mt-1">10 جمل مركبة (أكثر من كلمة) بإخفاء حرفين</p>
+                            <p class="text-xs font-bold text-slate-500 mt-1">10 عبارات مركبة (مع إخفاء حرفين لكل كلمة)</p>
                         </div>
                         <span id="status-3" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">جاهز للعب</span>
                     </div>
@@ -120,7 +120,7 @@
                                 <span class="text-2xl">🚌</span>
                                 <h4 class="font-black text-lg text-slate-800 group-hover:text-rose-600">القسم الرابع: باص كومبليت</h4>
                             </div>
-                            <p class="text-xs font-bold text-slate-500 mt-1">10 حروف (قديس، قديسة، آية، مدينة، نبات/أكلة)</p>
+                            <p class="text-xs font-bold text-slate-500 mt-1">10 حروف (5 عناصر بـ 10 درجات مرنة)</p>
                         </div>
                         <span id="status-4" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">جاهز للعب</span>
                     </div>
@@ -268,20 +268,20 @@
                 { q: "ما الرمز الروحي لثمرة 'الجوافة'؟", options: ["نقاء قلب الشهداء", "كثرة المعجزات", "انتشار الكرازة", "حلاوة الفردوس"], correct: "نقاء قلب الشهداء" },
                 { q: "بذور الجوافة الكثيرة ترمز في النيروز إلى؟", options: ["كثرة عدد الشهداء", "بذور الإيمان", "الآلام الكثيرة", "نجوم السماء"], correct: "كثرة عدد الشهداء" },
                 { q: "من هو الإمبراطور الذي أطلق عليه 'طاغية الشهداء'؟", options: ["دقلديانوس", "نيرون", "ترايان", "أغسطس"], correct: "دقلديانوس" },
-                { q: "ما هو الشهر القبطي الأول في السنة؟", options: ["توت", "كيهك", "نسي", "بابه"], correct: "توت" }
+                { q: "ما هو الشهر القبطي الأول في السنة؟", options: ["توت", "kيهك", "نسي", "بابه"], correct: "توت" }
             ],
             s2: ["أ", "م", "ب", "ي", "ك", "ش", "ر", "ج", "س", "ف"],
-            s3: [ // Reversed complex phrases separated by / with masked characters using dark blue underscore
-                { fullReversed: "م ي و ق ت / ة د ي ه ش ل ا", maskedReversed: 'م <span style="color: #1e3a8a; font-weight: 900;">_</span> و ق ت / ة <span style="color: #1e3a8a; font-weight: 900;">_</span> د ه ش ل ا', ans: "تقويم / الشهداء" },
-                { fullReversed: "س و ج ر ج ر ا م / ي ن ي ف ي س و ب أ", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ج ر <span style="color: #1e3a8a; font-weight: 900;">_</span> ر ا م / ي ن <span style="color: #1e3a8a; font-weight: 900;">_</span> ف ي س <span style="color: #1e3a8a; font-weight: 900;">_</span> ب أ', ans: "مارجرجس / أبو سيفين" },
-                { fullReversed: "س و ن a ف ي ت س إ / ا ن ي م ر ا م", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ن a ف <span style="color: #1e3a8a; font-weight: 900;">_</span> ت س إ / ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ي م ر <span style="color: #1e3a8a; font-weight: 900;">_</span> م', ans: "إستيفانوس / مارمينا" },
-                { fullReversed: "ز و ر ي ن / ح ل ب", maskedReversed: 'ز <span style="color: #1e3a8a; font-weight: 900;">_</span> ر ي ن / ح <span style="color: #1e3a8a; font-weight: 900;">_</span> ب', ans: "نيروز / بلح" },
-                { fullReversed: "ء ا د ه ش ل ا / م د", maskedReversed: 'ء <span style="color: #1e3a8a; font-weight: 900;">_</span> د ه ش ل ا / م <span style="color: #1e3a8a; font-weight: 900;">_</span> د', ans: "الشهداء / دم" },
-                { fullReversed: "س و ن ا ي ل د ق د / ت و ت", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا ي ل د <span style="color: #1e3a8a; font-weight: 900;">_</span> ق د / ت <span style="color: #1e3a8a; font-weight: 900;">_</span> ت', ans: "دقلديانوس / توت" },
-                { fullReversed: "ة ر م ث / ة ف ا ج", maskedReversed: 'ة ر <span style="color: #1e3a8a; font-weight: 900;">_</span> ث / ة ف <span style="color: #1e3a8a; font-weight: 900;">_</span> ا ج', ans: "ثمرة / جوافة" },
-                { fullReversed: "ي ط ب ق ل ا / ة ن س ل ا", maskedReversed: 'ي ط <span style="color: #1e3a8a; font-weight: 900;">_</span> ق ل ا / ة ن <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا', ans: "القبطي / السنة" },
-                { fullReversed: "د ع ج ش / ن ا م ي إ", maskedReversed: 'د ع <span style="color: #1e3a8a; font-weight: 900;">_</span> ش / ن ا م <span style="color: #1e3a8a; font-weight: 900;">_</span> ي إ', ans: "شجاع / إيمان" },
-                { fullReversed: "د ه ش / ر و ن", maskedReversed: 'د ه <span style="color: #1e3a8a; font-weight: 900;">_</span> ش / ر <span style="color: #1e3a8a; font-weight: 900;">_</span> ون', ans: "شهد / نور" }
+            s3: [ // Reversed complex phrases separated by / with 2 hidden underscore characters per word in dark blue
+                { fullReversed: "م ي و ق ت / ة د ي ه ش ل ا", maskedReversed: 'م <span style="color: #1e3a8a; font-weight: 900;">_</span> و <span style="color: #1e3a8a; font-weight: 900;">_</span> ت / ة <span style="color: #1e3a8a; font-weight: 900;">_</span> د ه <span style="color: #1e3a8a; font-weight: 900;">_</span> ش ل ا', ans: "تقويم / الشهداء" },
+                { fullReversed: "س و ج ر ج ر ا م / ي ن ي ف ي س و ب أ", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ج <span style="color: #1e3a8a; font-weight: 900;">_</span> ر ج ر ا م / ي ن <span style="color: #1e3a8a; font-weight: 900;">_</span> ف ي <span style="color: #1e3a8a; font-weight: 900;">_</span> س و ب أ', ans: "مارجرجس / أبو سيفين" },
+                { fullReversed: "س و ن a ف ي ت س إ / ا ن ي م ر ا م", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ن a ف <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ت س إ / ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ي م <span style="color: #1e3a8a; font-weight: 900;">_</span> ر ا م', ans: "إستيفانوس / مارمينا" },
+                { fullReversed: "ز و ر ي ن / ح ل ب", maskedReversed: 'ز <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ن / ح <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ب', ans: "نيروز / بلح" },
+                { fullReversed: "ء ا د ه ش ل ا / م د", maskedReversed: 'ء <span style="color: #1e3a8a; font-weight: 900;">_</span> د ه <span style="color: #1e3a8a; font-weight: 900;">_</span> ش ل ا / م <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> د', ans: "الشهداء / دم" },
+                { fullReversed: "س و ن ا ي ل د ق د / ت و ت", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ل د ق د / ت <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ت', ans: "دقلديانوس / توت" },
+                { fullReversed: "ة ر م ث / ة ف ا ج", maskedReversed: 'ة ر <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ث / ة ف <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ا ج', ans: "ثمرة / جوافة" },
+                { fullReversed: "ي ط ب ق ل ا / ة ن س ل ا", maskedReversed: 'ي ط <span style="color: #1e3a8a; font-weight: 900;">_</span> ق <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا / ة ن <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا', ans: "القبطي / السنة" },
+                { fullReversed: "د ع ج ش / ن ا م ي إ", maskedReversed: 'د ع <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ش / ن ا م <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ي إ', ans: "شجاع / إيمان" },
+                { fullReversed: "د ه ش / ر و ن", maskedReversed: 'د ه <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ش / ر <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ون', ans: "شهد / نور" }
             ],
             s4: ["ت", "ح", "د", "ز", "ص", "ط", "ع", "غ", "ل", "ن"]
         };
@@ -367,7 +367,7 @@
             subQ.innerHTML = "";
 
             const sec = state.selectedSection;
-            const secTitles = ["القسم الأول: اختيارات عامة ❓", "القسم الثاني: ترنيمة بحرف 🎵", "القسم الثالث: كلمات معكوسة (أكثر من كلمة بفاصل /) 🌀", "القسم الرابع: باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) 🚌"];
+            const secTitles = ["القسم الأول: اختيارات عامة ❓", "القسم الثاني: ترنيمة بحرف 🎵", "القسم الثالث: كلمات معكوسة (عبارات بفاصل / وإخفاء حرفين) 🌀", "القسم الرابع: باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) 🚌"];
             document.getElementById('section-tag').innerText = secTitles[sec - 1];
 
             if (sec === 1) {
@@ -387,7 +387,7 @@
                 interactiveActions.classList.remove('hidden');
             } else if (sec === 3) {
                 const data = db.s3[state.round];
-                document.getElementById('question-title').innerText = "اقرأ العبارات المعكوسة (مفصولة بـ / مع حروف مخفية):";
+                document.getElementById('question-title').innerText = "اقرأ العبارات المعكوسة (من الشمال لليمين لكل كلمة بفاصل /):";
                 subQ.innerHTML = data.maskedReversed;
                 reversedControls.classList.remove('hidden');
             } else if (sec === 4) {
