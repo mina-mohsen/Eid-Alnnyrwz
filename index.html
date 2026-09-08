@@ -90,7 +90,7 @@
                     </div>
 
                     <!-- Section 2 Card -->
-                    <div id="sec-card-2" onclick="selectSection(2)" class="p-4 sm:p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
+                    <div id="sec-card-2" onclick="selectSection(2)" class="p-4 sm:p-5 rounded-2xl border-2 border-rose-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-2xl">🎵</span>
@@ -102,19 +102,19 @@
                     </div>
 
                     <!-- Section 3 Card -->
-                    <div id="sec-card-3" onclick="selectSection(3)" class="p-4 sm:p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
+                    <div id="sec-card-3" onclick="selectSection(3)" class="p-4 sm:p-5 rounded-2xl border-2 border-rose-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-2xl">🌀</span>
                                 <h4 class="font-black text-lg text-slate-800 group-hover:text-rose-600">القسم الثالث: كلمات معكوسة</h4>
                             </div>
-                            <p class="text-xs font-bold text-slate-500 mt-1">10 أسماء قديسين من السنكسار (مصححة برمجياً بدقة)</p>
+                            <p class="text-xs font-bold text-slate-500 mt-1">10 أسماء قديسين من السنكسار (إخفاء حرفين مع إشارة للبدء)</p>
                         </div>
                         <span id="status-3" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">جاهز للعب</span>
                     </div>
 
                     <!-- Section 4 Card -->
-                    <div id="sec-card-4" onclick="selectSection(4)" class="p-4 sm:p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
+                    <div id="sec-card-4" onclick="selectSection(4)" class="p-4 sm:p-5 rounded-2xl border-2 border-rose-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-2xl">🚌</span>
@@ -159,7 +159,7 @@
                 <div class="text-center w-full px-2">
                     <span id="section-tag" class="inline-block px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-bold mb-2">--</span>
                     <h2 id="question-title" class="text-xl sm:text-3xl font-black text-slate-800 leading-snug">--</h2>
-                    <!-- مكان عرض الكلمات المعكوسة بطريقة صحيحة ودقيقة 100% -->
+                    <!-- مكان عرض الكلمات المعكوسة بدقة وتحديد كلمة البدء بعلامة ◀ -->
                     <div id="sub-question" class="mt-3 text-2xl sm:text-4xl font-black text-rose-600 tracking-wider drop-shadow-md"></div>
                 </div>
 
@@ -257,29 +257,34 @@
     </div>
 
     <script>
-        // دالة ذكية تقوم بعكس كل كلمة بدقة حرفاً بحرف تلقائياً لضمان سلامة الترتيب اللغوي
+        // دالة لعكس كل كلمة على حدة مع تحديد الكلمة الأولى بعلامة ◀ للبدء منها
         function getReversedPhrase(phrase) {
-            return phrase.split(' ').map(word => word.split('').reverse().join('')).join(' / ');
+            let words = phrase.split(' ');
+            return words.map((word, idx) => {
+                let rev = word.split('').reverse().join('');
+                return idx === 0 ? `◀ ${rev}` : rev;
+            }).join(' / ');
         }
 
-        // دالة لإخفاء 3 حروف عشوائية واستبدالها بشرطات زرقاء داكنة
+        // دالة لإخفاء حرفين فقط لكل كلمة عشوائياً واستبدالهما بشرطات زرقاء داكنة _
         function getMaskedPhrase(phrase) {
-            return phrase.split(' ').map(word => {
-                let arr = word.split('').reverse(); // عكس الحروف
-                let hiddenCount = Math.min(3, arr.length);
+            let words = phrase.split(' ');
+            return words.map((word, idx) => {
+                let arr = word.split('').reverse();
+                let hiddenCount = Math.min(2, arr.length); // حرفين فقط مخفيين
                 let indices = [];
                 while(indices.length < hiddenCount) {
-                    let idx = Math.floor(Math.random() * arr.length);
-                    if(!indices.includes(idx)) indices.push(idx);
+                    let id = Math.floor(Math.random() * arr.length);
+                    if(!indices.includes(id)) indices.push(id);
                 }
                 indices.forEach(i => {
                     arr[i] = '<span style="color: #1e3a8a; font-weight: 900;">_</span>';
                 });
-                return arr.join('');
+                let revWord = arr.join('');
+                return idx === 0 ? `◀ ${revWord}` : revWord;
             }).join(' / ');
         }
 
-        // قائمة الأسماء الـ 10 المطلوبة بدقة ت exacta
         const rawS3Names = [
             "مار مرقس الرسول",
             "أبانوب النهيسي",
@@ -322,9 +327,9 @@
             selectedSection: 1,
             completedSections: [false, false, false, false],
             round: 0,
-            scores: [0, 0], // Total accumulated
-            secScores: [0, 0], // Gained in current section
-            turn: 0, // 0 or 1
+            scores: [0, 0],
+            secScores: [0, 0],
+            turn: 0,
             names: ["فريق أبطال الإيمان", "فريق شهداء المسيح"],
             timer: null,
             timeLeft: 30,
@@ -375,7 +380,6 @@
             document.getElementById('progress-text').innerText = `جولة ${state.round + 1} / 10`;
             document.getElementById('next-btn').classList.add('hidden');
 
-            // Active Team Highlights
             document.getElementById('t1-active').classList.toggle('hidden', state.turn !== 0);
             document.getElementById('t2-active').classList.toggle('hidden', state.turn !== 1);
             document.getElementById('t1-card').classList.toggle('scale-105', state.turn === 0);
@@ -399,7 +403,7 @@
             subQ.innerHTML = "";
 
             const sec = state.selectedSection;
-            const secTitles = ["القسم الأول: اختيارات عامة ❓", "القسم الثاني: ترنيمة بحرف 🎵", "القسم الثالث: أسماء قديسي وشهداء النيروز (معكوسة ومضبوطة بدقة) 🌀", "القسم الرابع: باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) 🚌"];
+            const secTitles = ["القسم الأول: اختيارات عامة ❓", "القسم الثاني: ترنيمة بحرف 🎵", "القسم الثالث: كلمات معكوسة (مع إشارة الكلمة الأولى وإخفاء حرفين) 🌀", "القسم الرابع: باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) 🚌"];
             document.getElementById('section-tag').innerText = secTitles[sec - 1];
 
             if (sec === 1) {
@@ -419,7 +423,7 @@
                 interactiveActions.classList.remove('hidden');
             } else if (sec === 3) {
                 const data = db.s3[state.round];
-                document.getElementById('question-title').innerText = "اقرأ اسم القديس أو الشهيد المعكوس:";
+                document.getElementById('question-title').innerText = "اقرأ الكلمات المعكوسة (ابدأ من ◀ والكلمات مفصولة بـ /):";
                 subQ.innerHTML = data.maskedReversed;
                 reversedControls.classList.remove('hidden');
             } else if (sec === 4) {
