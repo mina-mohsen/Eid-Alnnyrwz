@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسابقة عيد النيروز التنافسية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), 
+                        url('https://images.unsplash.com/photo-1510070009289-b5bc34383727?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 3px solid #e11d48;
+        }
+        .nayrouz-gradient {
+            background: linear-gradient(135deg, #e11d48 0%, #d97706 100%);
+        }
+        .timer-circle {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 25px rgba(225, 29, 72, 0.35);
+        }
+        .correct-answer { background-color: #16a34a !important; color: white !important; border-color: #15803d !important; }
+        .wrong-answer { background-color: #dc2626 !important; color: white !important; border-color: #b91c1c !important; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-3 sm:p-6">
+
+    <!-- الحاوية الرئيسية -->
+    <div id="main-app" class="w-full max-w-5xl glass-panel rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col min-h-[88vh] relative">
+        
+        <!-- Header -->
+        <div class="nayrouz-gradient p-5 sm:p-6 text-white text-center shadow-lg relative flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="text-center sm:text-right">
+                <h1 class="text-2xl sm:text-4xl font-black mb-1 drop-shadow-md">🌿 مسابقة عيد النيروز المجيد 🍎</h1>
+                <p class="text-xs sm:text-base font-bold opacity-90">تحدي الفرق الشامل (4 أقسام / 40 جولة)</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="audio-btn" onclick="initAudio()" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full text-sm font-bold transition flex items-center gap-2">
+                    <span id="audio-icon">🔇</span> <span id="bgm-status">تفعيل الصوت</span>
+                </button>
+                <button onclick="toggleFullscreen()" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full text-sm font-bold transition">
+                    🖥️ ملء الشاشة
+                </button>
+            </div>
+        </div>
+
+        <!-- Setup Screen / Section Hub -->
+        <div id="setup-screen" class="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
+            
+            <!-- Teams Name Inputs -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-rose-50/80 p-5 rounded-3xl border-2 border-rose-200">
+                <div class="space-y-1">
+                    <label class="block text-rose-700 font-black text-lg"><i class="fa-solid fa-users text-rose-500"></i> اسم الفريق الأول:</label>
+                    <input type="text" id="team1-name" value="فريق أبطال الإيمان" class="w-full p-3 rounded-xl border-2 border-rose-200 focus:border-rose-500 outline-none text-base font-bold text-slate-800 shadow-sm bg-white">
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-amber-700 font-black text-lg"><i class="fa-solid fa-users text-amber-500"></i> اسم الفريق الثاني:</label>
+                    <input type="text" id="team2-name" value="فريق شهداء المسيح" class="w-full p-3 rounded-xl border-2 border-rose-200 focus:border-rose-500 outline-none text-base font-bold text-slate-800 shadow-sm bg-white">
+                </div>
+            </div>
+
+            <!-- Sections Overview -->
+            <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-black text-xl text-slate-800"><i class="fa-solid fa-layer-group text-rose-600"></i> اختر القسم للعب (أقسام المسابقة الـ 4):</h3>
+                    <span id="completed-badge" class="text-xs font-bold px-3 py-1 bg-amber-100 text-amber-800 rounded-full border border-amber-300">أقسام مكتملة: 0 / 4</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    
+                    <!-- Section 1 Card -->
+                    <div id="sec-card-1" onclick="selectSection(1)" class="p-4 sm:p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">❓</span>
+                                <h4 class="font-black text-lg text-slate-800 group-hover:text-rose-600">القسم الأول: اختيارات عامة</h4>
+                            </div>
+                            <p class="text-xs font-bold text-slate-500 mt-1">10 أسئلة طقسية وتاريخية عن النيروز والشهداء</p>
+                        </div>
+                        <span id="status-1" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">جاهز للعب</span>
+                    </div>
+
+                    <!-- Section 2 Card -->
+                    <div id="sec-card-2" onclick="selectSection(2)" class="p-4 sm:p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">🎵</span>
+                                <h4 class="font-black text-lg text-slate-800 group-hover:text-rose-600">القسم الثاني: ترنيمة بحرف</h4>
+                            </div>
+                            <p class="text-xs font-bold text-slate-500 mt-1">10 حروف لتحدي إنشاد ترنيمة تبدأ بنفس الحرف</p>
+                        </div>
+                        <span id="status-2" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">جاهز للعب</span>
+                    </div>
+
+                    <!-- Section 3 Card -->
+                    <div id="sec-card-3" onclick="selectSection(3)" class="p-4 sm:p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">🌀</span>
+                                <h4 class="font-black text-lg text-slate-800 group-hover:text-rose-600">القسم الثالث: كلمات معكوسة</h4>
+                            </div>
+                            <p class="text-xs font-bold text-slate-500 mt-1">10 كلمات/أشخاص بإخفاء حرفين (10 ن / 5 ن بالمساعدة)</p>
+                        </div>
+                        <span id="status-3" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">جاهز للعب</span>
+                    </div>
+
+                    <!-- Section 4 Card -->
+                    <div id="sec-card-4" onclick="selectSection(4)" class="p-4 sm:p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-rose-500 cursor-pointer transition shadow-md flex items-center justify-between group">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">🚌</span>
+                                <h4 class="font-black text-lg text-slate-800 group-hover:text-rose-600">القسم الرابع: باص كومبليت</h4>
+                            </div>
+                            <p class="text-xs font-bold text-slate-500 mt-1">10 حروف (قديس، قديسة، آية، مدينة، نبات/أكلة)</p>
+                        </div>
+                        <span id="status-4" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">جاهز للعب</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <button id="start-sec-btn" onclick="startSelectedSection()" class="w-full nayrouz-gradient hover:opacity-95 text-white font-black text-xl py-4 rounded-2xl shadow-xl transition transform active:scale-98">
+                🚀 ابدأ القسم المحدد الآن
+            </button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="hidden p-6 flex-1 flex flex-col justify-between space-y-4">
+            
+            <!-- Scoreboard -->
+            <div class="grid grid-cols-2 gap-4">
+                <div id="t1-card" class="p-4 rounded-3xl border-2 border-rose-200 text-center transition-all duration-300 bg-white">
+                    <h3 id="t1-display" class="font-black text-rose-700 text-base sm:text-xl">--</h3>
+                    <div id="t1-score" class="text-3xl sm:text-5xl font-black text-slate-800">0</div>
+                    <div id="t1-active" class="hidden text-xs font-bold text-rose-600 animate-pulse mt-1"><i class="fa-solid fa-bell"></i> دور الفريق الحالي</div>
+                </div>
+                <div id="t2-card" class="p-4 rounded-3xl border-2 border-amber-200 text-center transition-all duration-300 bg-white">
+                    <h3 id="t2-display" class="font-black text-amber-600 text-base sm:text-xl">--</h3>
+                    <div id="t2-score" class="text-3xl sm:text-5xl font-black text-slate-800">0</div>
+                    <div id="t2-active" class="hidden text-xs font-bold text-amber-600 animate-pulse mt-1"><i class="fa-solid fa-bell"></i> دور الفريق الحالي</div>
+                </div>
+            </div>
+
+            <!-- Question & Timer Area -->
+            <div class="flex-1 flex flex-col items-center justify-center space-y-4 relative py-2">
+                <div id="timer-box" class="w-20 h-20 sm:w-28 sm:h-28 rounded-full border-8 border-rose-500 flex items-center justify-center bg-white shadow-xl timer-circle">
+                    <span id="timer-text" class="text-3xl sm:text-5xl font-black text-rose-600">30</span>
+                </div>
+
+                <div class="text-center w-full px-2">
+                    <span id="section-tag" class="inline-block px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-bold mb-2">--</span>
+                    <h2 id="question-title" class="text-xl sm:text-3xl font-black text-slate-800 leading-snug">--</h2>
+                    <div id="sub-question" class="mt-3 text-3xl sm:text-5xl font-black text-rose-600 tracking-[0.25em] drop-shadow-md"></div>
+                </div>
+
+                <!-- MCQ Options Grid -->
+                <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-3xl"></div>
+
+                <!-- Reversed Words Controls (Section 3) -->
+                <div id="reversed-controls" class="hidden flex flex-col items-center gap-3 w-full max-w-md">
+                    <button id="hint-btn" onclick="revealReversedHint()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl shadow transition">
+                        💡 كشف الحروف المخفية (تصبح النتيجة 5 نقاط)
+                    </button>
+                    <button id="reveal-ans-btn" onclick="revealReversedAnswer()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl shadow transition">
+                        👁️ كشف الإجابة الكاملة
+                    </button>
+                    <div id="reversed-scoring" class="hidden flex gap-3 w-full">
+                        <button id="btn-10pts" onclick="resolveReversedScoring(10)" class="flex-1 bg-green-600 text-white font-black py-3 rounded-xl shadow">+10 نقاط (بدون مساعدة)</button>
+                        <button id="btn-5pts" onclick="resolveReversedScoring(5)" class="flex-1 bg-amber-600 text-white font-black py-3 rounded-xl shadow">+5 نقاط (مع المساعدة)</button>
+                        <button onclick="resolveReversedScoring(0)" class="flex-1 bg-gray-500 text-white font-black py-3 rounded-xl shadow">لم ينجح (0)</button>
+                    </div>
+                </div>
+
+                <!-- Interactive Controls (Section 2) -->
+                <div id="interactive-actions" class="hidden flex gap-3 w-full max-w-md">
+                    <button onclick="resolveInteractive(true)" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-black py-4 rounded-2xl shadow-lg">+10 نقاط</button>
+                    <button onclick="resolveInteractive(false)" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-black py-4 rounded-2xl shadow-lg">لم ينجح (0)</button>
+                </div>
+
+                <!-- Pass Complete Scoring Buttons (Section 4) -->
+                <div id="pass-complete-actions" class="hidden flex flex-col gap-2 w-full max-w-md">
+                    <p class="text-xs font-bold text-center text-slate-600">اختر النقاط التي أحرزها الفريق (2، 4، 6، 8، 10):</p>
+                    <div class="grid grid-cols-5 gap-2">
+                        <button onclick="resolvePassComplete(2)" class="bg-rose-500 hover:bg-rose-600 text-white font-black py-3 rounded-xl shadow text-sm">2</button>
+                        <button onclick="resolvePassComplete(4)" class="bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl shadow text-sm">4</button>
+                        <button onclick="resolvePassComplete(6)" class="bg-yellow-500 hover:bg-yellow-600 text-white font-black py-3 rounded-xl shadow text-sm">6</button>
+                        <button onclick="resolvePassComplete(8)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-xl shadow text-sm">8</button>
+                        <button onclick="resolvePassComplete(10)" class="bg-green-600 hover:bg-green-700 text-white font-black py-3 rounded-xl shadow text-sm">10</button>
+                    </div>
+                    <button onclick="resolvePassComplete(0)" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-black py-2.5 rounded-xl shadow text-sm mt-1">صفر (لم يجب)</button>
+                </div>
+            </div>
+
+            <!-- Footer Progress Bar -->
+            <div class="flex justify-between items-center text-slate-500 font-bold border-t pt-3">
+                <span id="progress-text">جولة 1 / 10</span>
+                <button id="next-btn" onclick="nextRound()" class="hidden px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-black rounded-xl shadow-lg transition">
+                    الجولة التالية ➡️
+                </button>
+            </div>
+        </div>
+
+        <!-- Section Completed Modal / Screen -->
+        <div id="section-result-screen" class="hidden p-8 text-center flex-1 flex flex-col justify-center items-center space-y-6">
+            <div class="text-7xl">📊</div>
+            <h2 class="text-3xl sm:text-4xl font-black text-rose-700" id="sec-res-title">اكتمل القسم بنجاح!</h2>
+            
+            <div class="bg-rose-50 p-6 rounded-3xl border-2 border-rose-200 w-full max-w-lg shadow-xl space-y-4">
+                <h3 class="font-black text-xl text-slate-800 border-b pb-2">نقاط هذا القسم الإضافية:</h3>
+                <div class="grid grid-cols-2 gap-4 text-slate-800">
+                    <div class="p-3 bg-white rounded-2xl shadow-sm border border-rose-100">
+                        <p class="font-bold text-sm text-rose-600" id="sec-t1-name">--</p>
+                        <p class="text-2xl font-black" id="sec-t1-gained">+0</p>
+                    </div>
+                    <div class="p-3 bg-white rounded-2xl shadow-sm border border-rose-100">
+                        <p class="font-bold text-sm text-amber-600" id="sec-t2-name">--</p>
+                        <p class="text-2xl font-black" id="sec-t2-gained">+0</p>
+                    </div>
+                </div>
+
+                <div class="border-t pt-3">
+                    <h4 class="font-bold text-sm text-slate-600 mb-2">إجمالي النقاط المتراكمة حتى الآن:</h4>
+                    <p class="text-xl font-black text-slate-800" id="total-accumulated-text">--</p>
+                </div>
+            </div>
+
+            <button onclick="returnToSectionHub()" class="px-8 py-4 nayrouz-gradient text-white font-black text-lg rounded-2xl shadow-xl transition hover:scale-105">
+                العودة لاختيار القسم التالي 🧭
+            </button>
+        </div>
+
+        <!-- Grand Final Results Screen -->
+        <div id="grand-result-screen" class="hidden p-8 text-center flex-1 flex flex-col justify-center items-center space-y-6">
+            <div class="text-8xl">🏆</div>
+            <h2 id="winner-msg" class="text-3xl sm:text-5xl font-black text-rose-700 drop-shadow">مبروك للفائز!</h2>
+            <p class="text-slate-600 font-bold text-lg">النتيجة النهائية الكلية لجميع الأقسام الأربعة 🎉</p>
+
+            <div class="bg-rose-50 p-6 rounded-3xl border-4 border-rose-200 w-full max-w-lg shadow-2xl">
+                <div id="final-stats" class="text-2xl font-black text-slate-800 space-y-4"></div>
+            </div>
+
+            <button onclick="location.reload()" class="px-10 py-4 nayrouz-gradient text-white font-black text-xl rounded-2xl shadow-2xl transition hover:scale-105">
+                بدء مسابقة جديدة بالكامل 🔄
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // قاعدة البيانات الـ 40
+        const db = {
+            s1: [
+                { q: "ما معنى كلمة 'نيروز' في الأصل القبطي؟", options: ["ني يارو (الأنهار)", "شمس البر", "عيد الأبناء", "صوت الرعد"], correct: "ني يارو (الأنهار)" },
+                { q: "لماذا بدأ التقويم القبطي بسنة 284 ميلادية؟", options: ["بداية حكم دقلديانوس", "ميلاد مارمرقس", "مجمع نيقية", "دخول المسيحية مصر"], correct: "بداية حكم دقلديانوس" },
+                { q: "ماذا ترمز 'نواة' البلح الأحمر في النيروز؟", options: ["قوة ثبات الشهداء", "صلابة الصليب", "القبور الحجرية", "حياة القيامة"], correct: "قوة ثبات الشهداء" },
+                { q: "أي أصحاح في الرؤيا يذكر منظر الشهداء تحت المذبح؟", options: ["الأصحاح السادس", "الأصحاح الأول", "الأصحاح الثاني عشر", "الأصحاح الخامس"], correct: "الأصحاح السادس" },
+                { q: "ما الرمز الروحي 'للقشرة الحمراء' للبلح؟", options: ["دم الشهداء المسفوك", "الحب الإلهي", "نار الروح القدس", "الثوب القرمزي"], correct: "دم الشهداء المسفوك" },
+                { q: "كم يوماً تستمر الفترة الفرايحية في عيد النيروز؟", options: ["17 يوماً (حتى عيد الصليب)", "7 أيام فقط", "3 أيام", "30 يوماً"], correct: "17 يوماً (حتى عيد الصليب)" },
+                { q: "ما الرمز الروحي لثمرة 'الجوافة'؟", options: ["نقاء قلب الشهداء", "كثرة المعجزات", "انتشار الكرازة", "حلاوة الفردوس"], correct: "نقاء قلب الشهداء" },
+                { q: "بذور الجوافة الكثيرة ترمز في النيروز إلى؟", options: ["كثرة عدد الشهداء", "بذور الإيمان", "الآلام الكثيرة", "نجوم السماء"], correct: "كثرة عدد الشهداء" },
+                { q: "من هو الإمبراطور الذي أطلق عليه 'طاغية الشهداء'؟", options: ["دقلديانوس", "نيرون", "ترايان", "أغسطس"], correct: "دقلديانوس" },
+                { q: "ما هو الشهر القبطي الأول في السنة؟", options: ["توت", "كيهك", "نسي", "بابه"], correct: "توت" }
+            ],
+            s2: ["أ", "م", "ب", "ي", "ك", "ش", "ر", "ج", "س", "ف"],
+            s3: [ // Reversed Words with 2 hidden underscore characters in dark blue
+                { fullReversed: "س و ن a ف ي ت س إ", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ت س إ', ans: "إستيفانوس" },
+                { fullReversed: "س و ج ر ج ر ا م", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ج ر <span style="color: #1e3a8a; font-weight: 900;">_</span> ر ا م', ans: "مارجرجس" },
+                { fullReversed: "ا ن ي م ر ا م", maskedReversed: 'ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ي م <span style="color: #1e3a8a; font-weight: 900;">_</span> ا م', ans: "مارمينا" },
+                { fullReversed: "ي ن ي ف ي س و ب أ", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ف <span style="color: #1e3a8a; font-weight: 900;">_</span> س و ب أ', ans: "أبو سيفين" },
+                { fullReversed: "ز و ر ي ن ل ا", maskedReversed: 'ز <span style="color: #1e3a8a; font-weight: 900;">_</span> ر ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا', ans: "النيروز" },
+                { fullReversed: "ء ا د ه ش ل ا م د", maskedReversed: 'ء <span style="color: #1e3a8a; font-weight: 900;">_</span> د ه <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا م د', ans: "دم الشهداء" },
+                { fullReversed: "س و ن ا ي ل د ق د", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ل د ق د', ans: "دقلديانوس" },
+                { fullReversed: "ت و ت", maskedReversed: 'ت <span style="color: #1e3a8a; font-weight: 900;">_</span> ت', ans: "توت" },
+                { fullReversed: "م ي و ق ت ل ا", maskedReversed: 'م <span style="color: #1e3a8a; font-weight: 900;">_</span> و ق <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا', ans: "التقويم" },
+                { fullReversed: "ح ل ب", maskedReversed: 'ح <span style="color: #1e3a8a; font-weight: 900;">_</span> ب', ans: "بلح" }
+            ],
+            s4: ["ت", "ح", "د", "ز", "ص", "ط", "ع", "غ", "ل", "ن"]
+        };
+
+        let state = {
+            selectedSection: 1,
+            completedSections: [false, false, false, false],
+            round: 0,
+            scores: [0, 0], // Total accumulated
+            secScores: [0, 0], // Gained in current section
+            turn: 0, // 0 or 1
+            names: ["فريق أبطال الإيمان", "فريق شهداء المسيح"],
+            timer: null,
+            timeLeft: 30,
+            audioEnabled: false,
+            bgm: null,
+            hintUsed: false
+        };
+
+        function selectSection(secNum) {
+            if (state.completedSections[secNum - 1]) {
+                alert("هذا القسم تم إنجازه بالفعل! اختر قسماً آخر.");
+                return;
+            }
+            state.selectedSection = secNum;
+            for (let i = 1; i <= 4; i++) {
+                const card = document.getElementById(`sec-card-${i}`);
+                if (i === secNum) {
+                    card.classList.add('border-rose-500', 'bg-rose-50');
+                } else {
+                    card.classList.remove('border-rose-500', 'bg-rose-50');
+                }
+            }
+        }
+
+        function startSelectedSection() {
+            state.names[0] = document.getElementById('team1-name').value.trim() || "فريق أبطال الإيمان";
+            state.names[1] = document.getElementById('team2-name').value.trim() || "فريق شهداء المسيح";
+
+            document.getElementById('t1-display').innerText = state.names[0];
+            document.getElementById('t2-display').innerText = state.names[1];
+
+            state.round = 0;
+            state.secScores = [0, 0];
+            state.turn = 0;
+
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+
+            renderRound();
+        }
+
+        function renderRound() {
+            clearInterval(state.timer);
+            state.timeLeft = 30;
+            state.hintUsed = false;
+            updateTimerUI();
+
+            document.getElementById('progress-text').innerText = `جولة ${state.round + 1} / 10`;
+            document.getElementById('next-btn').classList.add('hidden');
+
+            // Active Team Highlights
+            document.getElementById('t1-active').classList.toggle('hidden', state.turn !== 0);
+            document.getElementById('t2-active').classList.toggle('hidden', state.turn !== 1);
+            document.getElementById('t1-card').classList.toggle('scale-105', state.turn === 0);
+            document.getElementById('t1-card').classList.toggle('border-rose-500', state.turn === 0);
+            document.getElementById('t2-card').classList.toggle('scale-105', state.turn === 1);
+            document.getElementById('t2-card').classList.toggle('border-amber-500', state.turn === 1);
+
+            const optionsGrid = document.getElementById('options-grid');
+            const interactiveActions = document.getElementById('interactive-actions');
+            const passCompleteActions = document.getElementById('pass-complete-actions');
+            const reversedControls = document.getElementById('reversed-controls');
+            const subQ = document.getElementById('sub-question');
+
+            optionsGrid.innerHTML = "";
+            interactiveActions.classList.add('hidden');
+            passCompleteActions.classList.add('hidden');
+            reversedControls.classList.add('hidden');
+            document.getElementById('reversed-scoring').classList.add('hidden');
+            document.getElementById('hint-btn').classList.remove('hidden');
+            document.getElementById('reveal-ans-btn').classList.remove('hidden');
+            subQ.innerHTML = "";
+
+            const sec = state.selectedSection;
+            const secTitles = ["القسم الأول: اختيارات عامة ❓", "القسم الثاني: ترنيمة بحرف 🎵", "القسم الثالث: كلمات معكوسة 🌀", "القسم الرابع: باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) 🚌"];
+            document.getElementById('section-tag').innerText = secTitles[sec - 1];
+
+            if (sec === 1) {
+                const data = db.s1[state.round];
+                document.getElementById('question-title').innerText = data.q;
+                let opts = [...data.options].sort(() => Math.random() - 0.5);
+                opts.forEach(o => {
+                    const btn = document.createElement('button');
+                    btn.className = "p-4 sm:p-5 rounded-2xl border-2 border-slate-200 font-bold text-lg hover:border-rose-500 transition shadow-sm bg-white text-slate-800";
+                    btn.innerText = o;
+                    btn.onclick = () => checkMCQ(o, data.correct, btn);
+                    optionsGrid.appendChild(btn);
+                });
+            } else if (sec === 2) {
+                document.getElementById('question-title').innerText = "رنم ترنيمة تبدأ بحرف:";
+                subQ.innerText = db.s2[state.round];
+                interactiveActions.classList.remove('hidden');
+            } else if (sec === 3) {
+                const data = db.s3[state.round];
+                document.getElementById('question-title').innerText = "اقرأ الكلمة المعكوسة (حرفان مخفيان):";
+                subQ.innerHTML = data.maskedReversed;
+                reversedControls.classList.remove('hidden');
+            } else if (sec === 4) {
+                document.getElementById('question-title').innerText = "تحدي باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) بحرف:";
+                subQ.innerText = db.s4[state.round];
+                passCompleteActions.classList.remove('hidden');
+            }
+
+            startTimer();
+        }
+
+        function startTimer() {
+            state.timer = setInterval(() => {
+                state.timeLeft--;
+                updateTimerUI();
+                if (state.timeLeft <= 0) {
+                    clearInterval(state.timer);
+                    playSound('wrong');
+                    document.getElementById('next-btn').classList.remove('hidden');
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            const el = document.getElementById('timer-text');
+            const box = document.getElementById('timer-box');
+            el.innerText = state.timeLeft;
+            if (state.timeLeft <= 10) {
+                box.style.borderColor = '#ef4444';
+                el.style.color = '#ef4444';
+                if (state.timeLeft > 0) playSound('tick');
+            } else {
+                box.style.borderColor = '#e11d48';
+                el.style.color = '#e11d48';
+            }
+        }
+
+        function checkMCQ(choice, correct, btn) {
+            clearInterval(state.timer);
+            const allBtns = document.getElementById('options-grid').querySelectorAll('button');
+            allBtns.forEach(b => b.disabled = true);
+            
+            if (choice === correct) {
+                btn.classList.add('correct-answer');
+                addPoints(10);
+                playSound('correct');
+            } else {
+                btn.classList.add('wrong-answer');
+                playSound('wrong');
+                allBtns.forEach(b => { if(b.innerText === correct) b.classList.add('correct-answer'); });
+            }
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function revealReversedHint() {
+            state.hintUsed = true;
+            const data = db.s3[state.round];
+            document.getElementById('sub-question').innerText = data.fullReversed;
+            document.getElementById('hint-btn').classList.add('hidden');
+            playSound('tick');
+        }
+
+        function revealReversedAnswer() {
+            clearInterval(state.timer);
+            const data = db.s3[state.round];
+            document.getElementById('sub-question').innerText = `${data.ans} (${data.fullReversed})`;
+            document.getElementById('hint-btn').classList.add('hidden');
+            document.getElementById('reveal-ans-btn').classList.add('hidden');
+            document.getElementById('reversed-scoring').classList.remove('hidden');
+            
+            if (state.hintUsed) {
+                document.getElementById('btn-10pts').classList.add('opacity-50');
+            }
+        }
+
+        function resolveReversedScoring(pts) {
+            if (pts > 0) {
+                addPoints(pts);
+                playSound('correct');
+            } else {
+                playSound('wrong');
+            }
+            document.getElementById('reversed-scoring').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function resolveInteractive(success) {
+            clearInterval(state.timer);
+            if (success) { addPoints(10); playSound('correct'); }
+            else playSound('wrong');
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function resolvePassComplete(pts) {
+            clearInterval(state.timer);
+            if (pts > 0) {
+                addPoints(pts);
+                playSound('correct');
+            } else {
+                playSound('wrong');
+            }
+            document.getElementById('pass-complete-actions').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function addPoints(p) {
+            state.secScores[state.turn] += p;
+            state.scores[state.turn] += p;
+            document.getElementById('t1-score').innerText = state.scores[0];
+            document.getElementById('t2-score').innerText = state.scores[1];
+        }
+
+        function nextRound() {
+            state.round++;
+            state.turn = state.turn === 0 ? 1 : 0;
+            if (state.round < 10) {
+                renderRound();
+            } else {
+                showSectionResult();
+            }
+        }
+
+        function showSectionResult() {
+            state.completedSections[state.selectedSection - 1] = true;
+            
+            document.getElementById(`status-${state.selectedSection}`).innerText = "تم الإنجاز ✅";
+            document.getElementById(`status-${state.selectedSection}`).className = "text-xs font-bold px-2.5 py-1 bg-green-100 text-green-700 rounded-lg";
+            document.getElementById(`sec-card-${state.selectedSection}`).onclick = null;
+            document.getElementById(`sec-card-${state.selectedSection}`).classList.add('opacity-60', 'bg-gray-100');
+
+            const completedCount = state.completedSections.filter(x => x).length;
+            document.getElementById('completed-badge').innerText = `أقسام مكتملة: ${completedCount} / 4`;
+
+            if (completedCount === 4) {
+                showGrandResults();
+            } else {
+                document.getElementById('game-screen').classList.add('hidden');
+                document.getElementById('section-result-screen').classList.remove('hidden');
+
+                document.getElementById('sec-t1-name').innerText = state.names[0];
+                document.getElementById('sec-t2-name').innerText = state.names[1];
+                document.getElementById('sec-t1-gained').innerText = `+${state.secScores[0]} نقطة`;
+                document.getElementById('sec-t2-gained').innerText = `+${state.secScores[1]} نقطة`;
+                document.getElementById('total-accumulated-text').innerText = `${state.names[0]}: ${state.scores[0]} | ${state.names[1]}: ${state.scores[1]}`;
+            }
+        }
+
+        function returnToSectionHub() {
+            document.getElementById('section-result-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('hidden');
+            
+            for (let i = 1; i <= 4; i++) {
+                if (!state.completedSections[i - 1]) {
+                    selectSection(i);
+                    break;
+                }
+            }
+        }
+
+        function showGrandResults() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('section-result-screen').classList.add('hidden');
+            document.getElementById('grand-result-screen').classList.remove('hidden');
+
+            let winText = "";
+            if (state.scores[0] > state.scores[1]) winText = `🏆 مبروك للفائز (${state.names[0]})!`;
+            else if (state.scores[1] > state.scores[0]) winText = `🏆 مبروك للفائز (${state.names[1]})!`;
+            else winText = "🤝 تعادل تاريخي مبارك بين الفريقين!";
+
+            document.getElementById('winner-msg').innerText = winText;
+            document.getElementById('final-stats').innerHTML = `
+                <p class="text-rose-700">${state.names[0]}: ${state.scores[0]} نقطة</p>
+                <p class="text-amber-600">${state.names[1]}: ${state.scores[1]} نقطة</p>
+            `;
+
+            confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+        }
+
+        function playSound(type) {
+            const synth = new Tone.Synth().toDestination();
+            if (type === 'tick') synth.triggerAttackRelease("C5", "32n");
+            else if (type === 'correct') {
+                const poly = new Tone.PolySynth().toDestination();
+                poly.triggerAttackRelease(["C4", "E4", "G4"], "8n");
+            } else if (type === 'wrong') {
+                synth.triggerAttackRelease("G2", "4n");
+            }
+        }
+
+        function initAudio() {
+            if (state.audioEnabled) return;
+            Tone.start();
+            state.audioEnabled, true;
+            document.getElementById('bgm-status').innerText = "الصوت مفعل 🔊";
+            document.getElementById('audio-icon').innerText = "🔊";
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        }
+    </script>
+</body>
+</html>
