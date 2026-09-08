@@ -108,7 +108,7 @@
                                 <span class="text-2xl">🌀</span>
                                 <h4 class="font-black text-lg text-slate-800 group-hover:text-rose-600">القسم الثالث: كلمات معكوسة</h4>
                             </div>
-                            <p class="text-xs font-bold text-slate-500 mt-1">10 عبارات مصححة تماماً (مع إخفاء حرفين لكل كلمة)</p>
+                            <p class="text-xs font-bold text-slate-500 mt-1">10 أسماء قديسين من السنكسار (إخفاء 3 حروف)</p>
                         </div>
                         <span id="status-3" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg">جاهز للعب</span>
                     </div>
@@ -271,17 +271,17 @@
                 { q: "ما هو الشهر القبطي الأول في السنة؟", options: ["توت", "كيهك", "نسي", "بابه"], correct: "توت" }
             ],
             s2: ["أ", "م", "ب", "ي", "ك", "ش", "ر", "ج", "س", "ف"],
-            s3: [ // Reversed complex phrases: first word comes first naturally with 2 hidden underscore characters per word in dark blue
-                { fullReversed: "م ي و ق ت / ا ء ا د ه ش ل ا", maskedReversed: 'م <span style="color: #1e3a8a; font-weight: 900;">_</span> و <span style="color: #1e3a8a; font-weight: 900;">_</span> ت / ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ا د ه <span style="color: #1e3a8a; font-weight: 900;">_</span> ش ل ا', ans: "تقويم / الشهداء" },
-                { fullReversed: "س و ج ر ج ر ا م / ي ن ي ف ي س و ب أ", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ج <span style="color: #1e3a8a; font-weight: 900;">_</span> ر ج ر ا م / ي ن <span style="color: #1e3a8a; font-weight: 900;">_</span> ف ي <span style="color: #1e3a8a; font-weight: 900;">_</span> س و ب أ', ans: "مارجرجس / أبو سيفين" },
-                { fullReversed: "س و ن ا ف ي ت س إ / ا ن ي م ر ا م", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا ف <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ت س إ / ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ي م <span style="color: #1e3a8a; font-weight: 900;">_</span> ر ا م', ans: "إستيفانوس / مارمينا" },
-                { fullReversed: "ز و ر ي ن / ح ل ب", maskedReversed: 'ز <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ن / ح <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ب', ans: "نيروز / بلح" },
-                { fullReversed: "ا ء ا د ه ش ل ا / م د", maskedReversed: 'ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ا د ه <span style="color: #1e3a8a; font-weight: 900;">_</span> ش ل ا / م <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> د', ans: "الشهداء / دم" },
-                { fullReversed: "س و ن ا ي ل د ق د / ت و ت", maskedReversed: 'س <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ل د ق د / ت <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ت', ans: "دقلديانوس / توت" },
-                { fullReversed: "ة ر م ث / ة ف ا ج", maskedReversed: 'ة ر <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ث / ة ف <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ا ج', ans: "ثمرة / جوافة" },
-                { fullReversed: "ي ط ب ق ل ا / ة ن س ل ا", maskedReversed: 'ي ط <span style="color: #1e3a8a; font-weight: 900;">_</span> ق <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا / ة ن <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا', ans: "القبطي / السنة" },
-                { fullReversed: "د ع ج ش / ن ا م ي إ", maskedReversed: 'د ع <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ش / ن ا م <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ي إ', ans: "شجاع / إيمان" },
-                { fullReversed: "د ه ش / ر و ن", maskedReversed: 'د ه <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ش / ر <span style="color: #1e3a8a; font-weight: 900;">_</span> <span style="color: #1e3a8a; font-weight: 900;">_</span> ون', ans: "شهد / نور" }
+            s3: [ // Reversed Synaxarion Saints with 3 hidden underscore characters per name in dark blue
+                { fullReversed: "ي ر و ت ي پ س ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> ت ي <span style="color: #1e3a8a; font-weight: 900;">_</span> پ س ا', ans: "ابسخيرون" },
+                { fullReversed: "ي ر و س ا ف ي ل ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و س ا ف <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ل ا', ans: "الافساريون" },
+                { fullReversed: "ي ل ا ح و پ م", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ل ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ح و پ <span style="color: #1e3a8a; font-weight: 900;">_</span> م', ans: "مبفلاحتيل" },
+                { fullReversed: "ي ر و د ا و ث ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و د ا و <span style="color: #1e3a8a; font-weight: 900;">_</span> ث ا', ans: "اثاورودير" },
+                { fullReversed: "ي ن و ج و ر ت س ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا ج <span style="color: #1e3a8a; font-weight: 900;">_</span> و ر ت <span style="color: #1e3a8a; font-weight: 900;">_</span> س ا', ans: "استورجوني" },
+                { fullReversed: "ي ر و د ي ا ن و ب", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و د ي ا <span style="color: #1e3a8a; font-weight: 900;">_</span> ن و ب', ans: "بونياودير" },
+                { fullReversed: "ي ن و س ا ي ل ك ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ن ا س <span style="color: #1e3a8a; font-weight: 900;">_</span> ي ل ك <span style="color: #1e3a8a; font-weight: 900;">_</span> ا', ans: "اكليسايون" },
+                { fullReversed: "ي ر و ث ا ل ا ب", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و ث ا ل <span style="color: #1e3a8a; font-weight: 900;">_</span> ا ب', ans: "بالاثاوري" },
+                { fullReversed: "ي ر و د ا ك ي س ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و د ا ك <span style="color: #1e3a8a; font-weight: 900;">_</span> ي س ا', ans: "اسيكادوري" },
+                { fullReversed: "ي ر و ن ا پ س ا", maskedReversed: 'ي <span style="color: #1e3a8a; font-weight: 900;">_</span> ر <span style="color: #1e3a8a; font-weight: 900;">_</span> و ن ا پ <span style="color: #1e3a8a; font-weight: 900;">_</span> س ا', ans: "اسپانوري" }
             ],
             s4: ["ت", "ح", "د", "ز", "ص", "ط", "ع", "غ", "ل", "ن"]
         };
@@ -367,7 +367,7 @@
             subQ.innerHTML = "";
 
             const sec = state.selectedSection;
-            const secTitles = ["القسم الأول: اختيارات عامة ❓", "القسم الثاني: ترنيمة بحرف 🎵", "القسم الثالث: كلمات معكوسة (مرتبة حسب النطق بفاصل /) 🌀", "القسم الرابع: باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) 🚌"];
+            const secTitles = ["القسم الأول: اختيارات عامة ❓", "القسم الثاني: ترنيمة بحرف 🎵", "القسم الثالث: اسم قديس من السنكسار (مع إخفاء 3 حروف) 🌀", "القسم الرابع: باص كومبليت (قديس، قديسة، آية، مدينة، نبات/أكلة) 🚌"];
             document.getElementById('section-tag').innerText = secTitles[sec - 1];
 
             if (sec === 1) {
@@ -387,7 +387,7 @@
                 interactiveActions.classList.remove('hidden');
             } else if (sec === 3) {
                 const data = db.s3[state.round];
-                document.getElementById('question-title').innerText = "اقرأ العبارات المعكوسة (الكلمة الأولى تظهر أولاً):";
+                document.getElementById('question-title').innerText = "اقرأ اسم القديس المعكوس (من السنكسار):";
                 subQ.innerHTML = data.maskedReversed;
                 reversedControls.classList.remove('hidden');
             } else if (sec === 4) {
